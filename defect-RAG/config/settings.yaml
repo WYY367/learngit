@@ -1,0 +1,63 @@
+# Defect RAG System Configuration
+
+# LLM Configuration (OpenAI Compatible API)
+llm:
+  # API Configuration
+  base_url: "http://10.161.112.104:3000/v1"  # OpenAI compatible API endpoint
+  api_key: "sk-3MvLsxsKNNg6kiFCC3596105C6684c1a9832A67fC54f6dBb"
+  model: "DeepSeek-r1-0528-fp16-671b"  # Model name
+  verify_ssl: false      # Set to false if you encounter SSL certificate issues
+
+  # Generation Parameters (用户可调)
+  temperature: 0.5        # 0.0-2.0, lower=more deterministic
+  max_tokens: 2048        # Maximum response length
+  top_p: 0.7             # Nucleus sampling
+  frequency_penalty: 0.0  # Reduce repetition
+  presence_penalty: 0.0   # Encourage new topics
+
+# Embedding Configuration (OpenAI Compatible API)
+embedding:
+  base_url: "http://10.161.112.104:3000/v1"
+  api_key: "sk-3MvLsxsKNNg6kiFCC3596105C6684c1a9832A67fC54f6dBb"
+  model: "text-embedding-3-large"        # Embedding model name
+  verify_ssl: false       # Set to false if you encounter SSL certificate issues
+  vector_dimension: 1024  # Embedding vector dimension
+  batch_size: 32         # Batch size for embedding generation
+
+# Retrieval Configuration
+retrieval:
+  top_k: 5               # Number of similar defects to retrieve (final results)
+  similarity_threshold: 0.5  # Minimum similarity score (lower = more recall)
+  search_type: "similarity"  # similarity, mmr, similarity_score_threshold
+  enable_rerank: true    # Enable re-ranking for better results
+  rerank_top_k: 20       # Retrieve more results before re-ranking (Phase 1: increased from 10)
+  rerank_type: "llm"     # 'simple' (rule-based) or 'llm' (LLM-based) (Phase 1: use llm for better accuracy)
+
+# Vector Store Configuration
+vector_store:
+  persist_directory: "./vector_db"  # ChromaDB persistence path
+  collection_name: "defects"        # Collection name
+
+# Data Configuration
+data:
+  default_data_path: "./data (6).json"  # Default defects data file
+  text_fields:  # Fields to use for embedding
+    - "Summary"
+    - "PreClarification"
+    - "ImprovementMeasures"
+  metadata_fields:  # Fields to store as metadata
+    - "Identifier"
+    - "Summary"
+    - "Region"
+    - "Dept"
+    - "Component"
+    - "CategoryOfGaps"
+    - "SubCategoryOfGaps"
+    - "Customer"
+    - "ResolutionDate"
+
+# UI Configuration
+ui:
+  default_language: "zh"  # zh (Chinese) or en (English)
+  page_title: "软件缺陷分析RAG系统"
+  page_icon: "🔍"
